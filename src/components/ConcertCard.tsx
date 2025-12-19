@@ -1,10 +1,20 @@
-import { Calendar, MapPin, Ticket, ExternalLink, Music2, MessageCircle, Users } from "lucide-react";
+import { Calendar, MapPin, Ticket, ExternalLink, Music2, MessageCircle, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Concert } from "@/lib/concerts-data";
 
 interface ConcertCardProps {
-  concert: Concert;
+  concert: {
+    id: string;
+    name: string;
+    date: string;
+    venue: string;
+    ticketStatus: string;
+    description?: string;
+    review?: string;
+    ticketUrl?: string;
+    spotifyUrl?: string;
+    imageUrl?: string;
+  };
   interestedCount?: number;
   isInterested?: boolean;
   onToggleInterest?: () => void;
@@ -19,10 +29,19 @@ const ConcertCard = ({
   onOpenDetails 
 }: ConcertCardProps) => {
   const formatDate = (dateString: string) => {
+    // Try to parse the date string
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      // If parsing fails, try to extract from the string
+      const parts = dateString.split(', ');
+      if (parts.length >= 2) {
+        return { month: parts[1]?.split(' ')[0]?.slice(0, 3) || 'TBD', day: parts[1]?.split(' ')[1] || '?' };
+      }
+      return { month: 'TBD', day: '?' };
+    }
     const month = date.toLocaleString('default', { month: 'short' });
     const day = date.getDate();
-    return { month, day };
+    return { month, day: day.toString() };
   };
 
   const { month, day } = formatDate(concert.date);
@@ -74,6 +93,15 @@ const ConcertCard = ({
               <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
                 {concert.description}
               </p>
+            )}
+
+            {concert.review && (
+              <div className="flex items-start gap-2 mb-4 p-2 rounded-lg bg-muted/50">
+                <Star className="w-4 h-4 text-warning flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {concert.review}
+                </p>
+              </div>
             )}
 
             {/* Actions */}
