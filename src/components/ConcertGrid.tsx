@@ -1,41 +1,45 @@
-import { useState } from "react";
 import ConcertCard from "./ConcertCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getUpcomingConcerts, getPastConcerts } from "@/lib/concerts-data";
-import { Calendar, History } from "lucide-react";
+import { useConcerts } from "@/hooks/useConcerts";
+import { Calendar, History, Loader2 } from "lucide-react";
 
 const ConcertGrid = () => {
-  const [interested, setInterested] = useState<Set<string>>(new Set());
-  
+  const { 
+    loading, 
+    toggleInterest, 
+    isInterested, 
+    getInterestedCount,
+    getUpcomingConcerts,
+    getPastConcerts 
+  } = useConcerts();
+
   const upcomingConcerts = getUpcomingConcerts();
   const pastConcerts = getPastConcerts();
 
-  const toggleInterest = (concertId: string) => {
-    setInterested(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(concertId)) {
-        newSet.delete(concertId);
-      } else {
-        newSet.add(concertId);
-      }
-      return newSet;
-    });
-  };
+  if (loading) {
+    return (
+      <section className="py-12">
+        <div className="container mx-auto px-4 flex justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
         <Tabs defaultValue="upcoming" className="w-full">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <h2 className="text-2xl md:text-3xl font-bold">Concert Schedule</h2>
             <TabsList className="glass">
               <TabsTrigger value="upcoming" className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground">
                 <Calendar className="w-4 h-4 mr-2" />
-                Upcoming
+                Upcoming ({upcomingConcerts.length})
               </TabsTrigger>
               <TabsTrigger value="past" className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground">
                 <History className="w-4 h-4 mr-2" />
-                Past Shows
+                Past Shows ({pastConcerts.length})
               </TabsTrigger>
             </TabsList>
           </div>
@@ -52,10 +56,25 @@ const ConcertGrid = () => {
                 {upcomingConcerts.map(concert => (
                   <ConcertCard
                     key={concert.id}
-                    concert={concert}
-                    isInterested={interested.has(concert.id)}
+                    concert={{
+                      id: concert.id,
+                      name: concert.name,
+                      date: new Date(concert.date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      }),
+                      venue: concert.venue,
+                      ticketStatus: concert.ticket_status || 'pending',
+                      description: concert.description || undefined,
+                      ticketUrl: concert.ticket_url || undefined,
+                      spotifyUrl: concert.spotify_url || undefined,
+                      imageUrl: concert.image_url || undefined,
+                    }}
+                    isInterested={isInterested(concert.id)}
                     onToggleInterest={() => toggleInterest(concert.id)}
-                    interestedCount={Math.floor(Math.random() * 5)}
+                    interestedCount={getInterestedCount(concert.id)}
                   />
                 ))}
               </div>
@@ -74,9 +93,26 @@ const ConcertGrid = () => {
                 {pastConcerts.map(concert => (
                   <ConcertCard
                     key={concert.id}
-                    concert={concert}
-                    isInterested={interested.has(concert.id)}
+                    concert={{
+                      id: concert.id,
+                      name: concert.name,
+                      date: new Date(concert.date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      }),
+                      venue: concert.venue,
+                      ticketStatus: concert.ticket_status || 'pending',
+                      description: concert.description || undefined,
+                      review: concert.review || undefined,
+                      ticketUrl: concert.ticket_url || undefined,
+                      spotifyUrl: concert.spotify_url || undefined,
+                      imageUrl: concert.image_url || undefined,
+                    }}
+                    isInterested={isInterested(concert.id)}
                     onToggleInterest={() => toggleInterest(concert.id)}
+                    interestedCount={getInterestedCount(concert.id)}
                   />
                 ))}
               </div>
