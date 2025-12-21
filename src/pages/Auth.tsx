@@ -223,9 +223,7 @@ const Auth = () => {
           </Tabs>
         </Card>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
-        </p>
+        <p className="text-center text-sm text-muted-foreground mt-6">By continuing, you agree to our Terms of Service and Privacy Policy (just kidding, I don't have any of those... just know that I'll be careful with your email address, and nobody else will be able to see anything other than your name)</p>
       </div>
     </div>;
 };
