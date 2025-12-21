@@ -1,10 +1,28 @@
+import { useState } from "react";
 import ConcertCard from "./ConcertCard";
+import ConcertDetailsDialog from "./ConcertDetailsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useConcerts } from "@/hooks/useConcerts";
 import { Calendar, History, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 
+interface ConcertDetails {
+  id: string;
+  name: string;
+  date: string;
+  venue: string;
+  ticketStatus: string;
+  description?: string;
+  review?: string;
+  ticketUrl?: string;
+  spotifyUrl?: string;
+  imageUrl?: string;
+}
+
 const ConcertGrid = () => {
+  const [selectedConcert, setSelectedConcert] = useState<ConcertDetails | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
   const { 
     loading, 
     toggleInterest, 
@@ -16,6 +34,11 @@ const ConcertGrid = () => {
 
   const upcomingConcerts = getUpcomingConcerts();
   const pastConcerts = getPastConcerts();
+
+  const handleOpenDetails = (concert: ConcertDetails) => {
+    setSelectedConcert(concert);
+    setDialogOpen(true);
+  };
 
   if (loading) {
     return (
@@ -54,25 +77,29 @@ const ConcertGrid = () => {
               </div>
             ) : (
               <div className="grid gap-4">
-                {upcomingConcerts.map(concert => (
-                  <ConcertCard
-                    key={concert.id}
-                    concert={{
-                      id: concert.id,
-                      name: concert.name,
-                      date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
-                      venue: concert.venue,
-                      ticketStatus: concert.ticket_status || 'pending',
-                      description: concert.description || undefined,
-                      ticketUrl: concert.ticket_url || undefined,
-                      spotifyUrl: concert.spotify_url || undefined,
-                      imageUrl: concert.image_url || undefined,
-                    }}
-                    isInterested={isInterested(concert.id)}
-                    onToggleInterest={() => toggleInterest(concert.id)}
-                    interestedCount={getInterestedCount(concert.id)}
-                  />
-                ))}
+                {upcomingConcerts.map(concert => {
+                  const concertDetails: ConcertDetails = {
+                    id: concert.id,
+                    name: concert.name,
+                    date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
+                    venue: concert.venue,
+                    ticketStatus: concert.ticket_status || 'pending',
+                    description: concert.description || undefined,
+                    ticketUrl: concert.ticket_url || undefined,
+                    spotifyUrl: concert.spotify_url || undefined,
+                    imageUrl: concert.image_url || undefined,
+                  };
+                  return (
+                    <ConcertCard
+                      key={concert.id}
+                      concert={concertDetails}
+                      isInterested={isInterested(concert.id)}
+                      onToggleInterest={() => toggleInterest(concert.id)}
+                      interestedCount={getInterestedCount(concert.id)}
+                      onOpenDetails={() => handleOpenDetails(concertDetails)}
+                    />
+                  );
+                })}
               </div>
             )}
           </TabsContent>
@@ -86,30 +113,40 @@ const ConcertGrid = () => {
               </div>
             ) : (
               <div className="grid gap-4 opacity-80">
-                {pastConcerts.map(concert => (
-                  <ConcertCard
-                    key={concert.id}
-                    concert={{
-                      id: concert.id,
-                      name: concert.name,
-                      date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
-                      venue: concert.venue,
-                      ticketStatus: concert.ticket_status || 'pending',
-                      description: concert.description || undefined,
-                      review: concert.review || undefined,
-                      ticketUrl: concert.ticket_url || undefined,
-                      spotifyUrl: concert.spotify_url || undefined,
-                      imageUrl: concert.image_url || undefined,
-                    }}
-                    isInterested={isInterested(concert.id)}
-                    onToggleInterest={() => toggleInterest(concert.id)}
-                    interestedCount={getInterestedCount(concert.id)}
-                  />
-                ))}
+                {pastConcerts.map(concert => {
+                  const concertDetails: ConcertDetails = {
+                    id: concert.id,
+                    name: concert.name,
+                    date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
+                    venue: concert.venue,
+                    ticketStatus: concert.ticket_status || 'pending',
+                    description: concert.description || undefined,
+                    review: concert.review || undefined,
+                    ticketUrl: concert.ticket_url || undefined,
+                    spotifyUrl: concert.spotify_url || undefined,
+                    imageUrl: concert.image_url || undefined,
+                  };
+                  return (
+                    <ConcertCard
+                      key={concert.id}
+                      concert={concertDetails}
+                      isInterested={isInterested(concert.id)}
+                      onToggleInterest={() => toggleInterest(concert.id)}
+                      interestedCount={getInterestedCount(concert.id)}
+                      onOpenDetails={() => handleOpenDetails(concertDetails)}
+                    />
+                  );
+                })}
               </div>
             )}
           </TabsContent>
         </Tabs>
+
+        <ConcertDetailsDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          concert={selectedConcert}
+        />
       </div>
     </section>
   );
