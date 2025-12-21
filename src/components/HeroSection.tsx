@@ -13,7 +13,7 @@ const HeroSection = () => {
       <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-12">
         <div className="max-w-2xl">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-          <span className="text-gradient bg-primary-foreground text-primary text-5xl font-extrabold">Dylan's Concert Crew</span>
+          <span className="text-gradient text-primary text-5xl font-extrabold bg-transparent">Dylan's Concert Crew</span>
         </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
             Plan concerts with friends. Browse upcoming shows, mark your interest, 
