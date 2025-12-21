@@ -9,7 +9,7 @@ const corsHeaders = {
 };
 
 interface NotificationRequest {
-  type: "new_comment" | "new_user";
+  type: "new_comment" | "new_user" | "new_interest";
   userName?: string;
   userEmail?: string;
   concertName?: string;
@@ -70,6 +70,18 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
             <p style="margin: 0 0 10px 0;"><strong>Display Name:</strong> ${userName}</p>
             ${userEmail ? `<p style="margin: 0;"><strong>Email:</strong> ${userEmail}</p>` : ""}
+          </div>
+          <p style="color: #666; font-size: 14px;">This notification was sent from your Concert Tracker app.</p>
+        </div>
+      `;
+    } else if (type === "new_interest") {
+      subject = `🎫 Someone is interested in "${concertName}"`;
+      htmlContent = `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">New Concert Interest</h1>
+          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="margin: 0 0 10px 0;"><strong>Concert:</strong> ${concertName}</p>
+            <p style="margin: 0;"><strong>User:</strong> ${userName}</p>
           </div>
           <p style="color: #666; font-size: 14px;">This notification was sent from your Concert Tracker app.</p>
         </div>

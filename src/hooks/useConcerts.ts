@@ -124,6 +124,9 @@ export const useConcerts = () => {
       setInterests(interests.filter((i) => i.id !== existingInterest.id));
       toast.success("Interest removed");
     } else {
+      // Get concert name for notification
+      const concert = concerts.find(c => c.id === concertId);
+      
       const { data, error } = await supabase
         .from("concert_interests")
         .insert({
@@ -141,6 +144,17 @@ export const useConcerts = () => {
 
       setInterests([...interests, data]);
       toast.success("Marked as interested!");
+
+      // Send notification (fire and forget)
+      if (concert) {
+        supabase.functions.invoke("send-notification", {
+          body: {
+            type: "new_interest",
+            userName: user.email?.split("@")[0] || "Someone",
+            concertName: concert.name,
+          },
+        }).catch(err => console.error("Failed to send interest notification:", err));
+      }
     }
   };
 
