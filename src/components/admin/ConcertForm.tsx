@@ -238,7 +238,7 @@ export const ConcertForm = ({ concertId, onCancel, onSaveComplete }: ConcertForm
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
                       <Ticket className="w-4 h-4" />
-                      Ticket Status
+                      Dylan's Status
                     </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
@@ -247,8 +247,8 @@ export const ConcertForm = ({ concertId, onCancel, onSaveComplete }: ConcertForm
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="thinking">Thinking</SelectItem>
-                        <SelectItem value="purchased">Purchased</SelectItem>
+                        <SelectItem value="thinking">Contemplating</SelectItem>
+                        <SelectItem value="purchased">Ticket Purchased</SelectItem>
                         <SelectItem value="not_going">Not Going</SelectItem>
                       </SelectContent>
                     </Select>

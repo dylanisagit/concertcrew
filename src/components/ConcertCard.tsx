@@ -49,11 +49,11 @@ const ConcertCard = ({
   const getStatusBadge = () => {
     switch (concert.ticketStatus) {
       case "thinking":
-        return <Badge variant="secondary" className="bg-warning/20 text-warning border-warning/30">Considering</Badge>;
-      case "bought":
-        return <Badge variant="secondary" className="bg-success/20 text-success border-success/30">Tickets Secured</Badge>;
-      case "pending":
-        return <Badge variant="secondary" className="bg-muted text-muted-foreground">No tickets yet</Badge>;
+        return <Badge variant="secondary" className="bg-warning/20 text-warning border-warning/30">Contemplating</Badge>;
+      case "purchased":
+        return <Badge variant="secondary" className="bg-success/20 text-success border-success/30">Ticket Purchased</Badge>;
+      case "not_going":
+        return <Badge variant="secondary" className="bg-destructive/20 text-destructive border-destructive/30">Not Going</Badge>;
       default:
         return null;
     }

@@ -67,11 +67,11 @@ export const ConcertList = ({ onEdit }: ConcertListProps) => {
   const getStatusBadge = (status: string | null) => {
     switch (status) {
       case "purchased":
-        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Purchased</Badge>;
+        return <Badge className="bg-success/20 text-success border-success/30">Ticket Purchased</Badge>;
       case "not_going":
-        return <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Not Going</Badge>;
+        return <Badge className="bg-destructive/20 text-destructive border-destructive/30">Not Going</Badge>;
       default:
-        return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Thinking</Badge>;
+        return <Badge className="bg-warning/20 text-warning border-warning/30">Contemplating</Badge>;
     }
   };
 
@@ -107,7 +107,7 @@ export const ConcertList = ({ onEdit }: ConcertListProps) => {
                     <TableHead>Name</TableHead>
                     <TableHead>Venue</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Dylan's Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
