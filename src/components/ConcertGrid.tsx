@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ConcertCard from "./ConcertCard";
 import ConcertDetailsDialog from "./ConcertDetailsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useConcerts } from "@/hooks/useConcerts";
 import { Calendar, History, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ConcertDetails {
   id: string;
@@ -22,9 +23,11 @@ interface ConcertDetails {
 const ConcertGrid = () => {
   const [selectedConcert, setSelectedConcert] = useState<ConcertDetails | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   
   const { 
     loading, 
+    concerts,
     toggleInterest, 
     isInterested, 
     getInterestedCount,
@@ -34,6 +37,43 @@ const ConcertGrid = () => {
 
   const upcomingConcerts = getUpcomingConcerts();
   const pastConcerts = getPastConcerts();
+
+  useEffect(() => {
+    const fetchCommentCounts = async () => {
+      if (concerts.length === 0) return;
+      
+      const { data, error } = await supabase
+        .from('comments')
+        .select('concert_id');
+      
+      if (error) {
+        console.error('Error fetching comment counts:', error);
+        return;
+      }
+
+      const counts: Record<string, number> = {};
+      data?.forEach(comment => {
+        counts[comment.concert_id] = (counts[comment.concert_id] || 0) + 1;
+      });
+      setCommentCounts(counts);
+    };
+
+    fetchCommentCounts();
+
+    // Subscribe to comment changes
+    const channel = supabase
+      .channel('comment-counts')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'comments' },
+        () => fetchCommentCounts()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [concerts]);
 
   const handleOpenDetails = (concert: ConcertDetails) => {
     setSelectedConcert(concert);
@@ -96,6 +136,7 @@ const ConcertGrid = () => {
                       isInterested={isInterested(concert.id)}
                       onToggleInterest={() => toggleInterest(concert.id)}
                       interestedCount={getInterestedCount(concert.id)}
+                      commentCount={commentCounts[concert.id] || 0}
                       onOpenDetails={() => handleOpenDetails(concertDetails)}
                     />
                   );
@@ -133,6 +174,7 @@ const ConcertGrid = () => {
                       isInterested={isInterested(concert.id)}
                       onToggleInterest={() => toggleInterest(concert.id)}
                       interestedCount={getInterestedCount(concert.id)}
+                      commentCount={commentCounts[concert.id] || 0}
                       onOpenDetails={() => handleOpenDetails(concertDetails)}
                     />
                   );

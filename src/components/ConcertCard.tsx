@@ -16,6 +16,7 @@ interface ConcertCardProps {
     imageUrl?: string;
   };
   interestedCount?: number;
+  commentCount?: number;
   isInterested?: boolean;
   onToggleInterest?: () => void;
   onOpenDetails?: () => void;
@@ -23,7 +24,8 @@ interface ConcertCardProps {
 
 const ConcertCard = ({ 
   concert, 
-  interestedCount = 0, 
+  interestedCount = 0,
+  commentCount = 0,
   isInterested = false,
   onToggleInterest,
   onOpenDetails 
@@ -118,7 +120,7 @@ const ConcertCard = ({
 
               <Button size="sm" variant="ghost" onClick={onOpenDetails}>
                 <MessageCircle className="w-4 h-4 mr-1" />
-                Discuss
+                Discuss{commentCount > 0 && ` (${commentCount})`}
               </Button>
 
               {concert.spotifyUrl && (
