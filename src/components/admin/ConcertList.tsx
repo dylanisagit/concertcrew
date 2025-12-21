@@ -132,7 +132,7 @@ export const ConcertList = ({ onEdit }: ConcertListProps) => {
                       <TableCell>
                         <div className="flex items-center gap-1 text-muted-foreground">
                           <Calendar className="w-3 h-3" />
-                          {format(new Date(concert.date), "MMM d, yyyy")}
+                          {format(new Date(concert.date), "EEEE, MMM do ''yy")}
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(concert.ticket_status)}</TableCell>
