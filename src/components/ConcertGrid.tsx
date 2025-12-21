@@ -2,6 +2,7 @@ import ConcertCard from "./ConcertCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useConcerts } from "@/hooks/useConcerts";
 import { Calendar, History, Loader2 } from "lucide-react";
+import { format } from "date-fns";
 
 const ConcertGrid = () => {
   const { 
@@ -59,12 +60,7 @@ const ConcertGrid = () => {
                     concert={{
                       id: concert.id,
                       name: concert.name,
-                      date: new Date(concert.date).toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      }),
+                      date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
                       venue: concert.venue,
                       ticketStatus: concert.ticket_status || 'pending',
                       description: concert.description || undefined,
@@ -96,12 +92,7 @@ const ConcertGrid = () => {
                     concert={{
                       id: concert.id,
                       name: concert.name,
-                      date: new Date(concert.date).toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      }),
+                      date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
                       venue: concert.venue,
                       ticketStatus: concert.ticket_status || 'pending',
                       description: concert.description || undefined,

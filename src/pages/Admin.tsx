@@ -11,6 +11,7 @@ const Admin = () => {
   const { isAdmin, loading, user } = useAuth();
   const navigate = useNavigate();
   const [editingConcertId, setEditingConcertId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("list");
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -32,14 +33,17 @@ const Admin = () => {
 
   const handleEditConcert = (concertId: string) => {
     setEditingConcertId(concertId);
+    setActiveTab("form");
   };
 
   const handleCancelEdit = () => {
     setEditingConcertId(null);
+    setActiveTab("list");
   };
 
   const handleSaveComplete = () => {
     setEditingConcertId(null);
+    setActiveTab("list");
   };
 
   return (
@@ -56,7 +60,7 @@ const Admin = () => {
           </div>
         </div>
 
-        <Tabs defaultValue={editingConcertId ? "form" : "list"} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="glass">
             <TabsTrigger value="list" className="flex items-center gap-2">
               <List className="w-4 h-4" />
