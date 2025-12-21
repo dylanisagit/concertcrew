@@ -109,7 +109,7 @@ const Auth = () => {
             <Music className="w-8 h-8 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-gradient text-primary">Dylan's Concert Crew</h1>
-          <p className="text-muted-foreground mt-2">Plan concerts with your friends</p>
+          <p className="text-muted-foreground mt-2">Plan to attend some concerts with Dylan</p>
         </div>
 
         <Card className="glass border-border/50">
