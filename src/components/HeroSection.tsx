@@ -15,10 +15,7 @@ const HeroSection = () => {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
           <span className="text-gradient text-primary text-5xl font-extrabold bg-transparent">Dylan's Concert Crew</span>
         </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
-            Plan concerts with friends. Browse upcoming shows, mark your interest, 
-            and coordinate who's going to which gigs.
-          </p>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-lg">Browse upcoming shows that piqued Dylan's interest and let him know if you're similarly intrigued through the Discuss feature. Hit the "I'm Interested" button to let him know who's going to which gigs.</p>
         </div>
       </div>
     </section>;
