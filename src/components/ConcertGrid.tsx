@@ -4,7 +4,6 @@ import ConcertDetailsDialog from "./ConcertDetailsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useConcerts } from "@/hooks/useConcerts";
 import { Calendar, History, Loader2 } from "lucide-react";
-import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ConcertDetails {
@@ -121,7 +120,9 @@ const ConcertGrid = () => {
                   const concertDetails: ConcertDetails = {
                     id: concert.id,
                     name: concert.name,
-                    date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
+                    // Keep the raw YYYY-MM-DD date from the database.
+                    // Formatting is handled where we render to avoid timezone parsing issues.
+                    date: concert.date,
                     venue: concert.venue,
                     ticketStatus: concert.ticket_status || 'pending',
                     description: concert.description || undefined,
@@ -158,7 +159,9 @@ const ConcertGrid = () => {
                   const concertDetails: ConcertDetails = {
                     id: concert.id,
                     name: concert.name,
-                    date: format(new Date(concert.date), "EEEE, MMM do ''yy"),
+                    // Keep the raw YYYY-MM-DD date from the database.
+                    // Formatting is handled where we render to avoid timezone parsing issues.
+                    date: concert.date,
                     venue: concert.venue,
                     ticketStatus: concert.ticket_status || 'pending',
                     description: concert.description || undefined,

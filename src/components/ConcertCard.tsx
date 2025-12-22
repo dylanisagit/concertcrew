@@ -1,4 +1,5 @@
 import { Calendar, MapPin, Ticket, ExternalLink, Music2, MessageCircle, Users, Star } from "lucide-react";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -30,18 +31,17 @@ const ConcertCard = ({
   onToggleInterest,
   onOpenDetails 
 }: ConcertCardProps) => {
-  const formatDate = (dateString: string) => {
-    // Add noon time to prevent timezone shift issues with date-only strings
-    const date = new Date(dateString + "T12:00:00");
-    if (isNaN(date.getTime())) {
-      return { month: 'TBD', day: '?' };
-    }
-    const month = date.toLocaleString('default', { month: 'short' });
-    const day = date.getDate();
-    return { month, day: day.toString() };
+  const parseConcertDate = (dateString: string) => {
+    // If it's a date-only string (YYYY-MM-DD), add a local noon time to avoid timezone day-shift.
+    const safe = dateString.includes("T") ? dateString : `${dateString}T12:00:00`;
+    const d = new Date(safe);
+    return isNaN(d.getTime()) ? null : d;
   };
 
-  const { month, day } = formatDate(concert.date);
+  const dateObj = parseConcertDate(concert.date);
+  const month = dateObj ? dateObj.toLocaleString("default", { month: "short" }) : "TBD";
+  const day = dateObj ? String(dateObj.getDate()) : "?";
+  const fullDateLabel = dateObj ? format(dateObj, "EEEE, MMM do ''yy") : concert.date;
 
   const getStatusBadge = () => {
     switch (concert.ticketStatus) {
@@ -82,7 +82,7 @@ const ConcertCard = ({
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
-                <span>{concert.date}</span>
+                <span>{fullDateLabel}</span>
               </div>
             </div>
 
