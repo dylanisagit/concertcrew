@@ -7,7 +7,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Music2, ExternalLink, Star } from "lucide-react";
+import { format } from "date-fns";
 import ConcertDiscussion from "./ConcertDiscussion";
+
+const parseConcertDate = (dateString: string) => {
+  const safe = dateString.includes("T") ? dateString : `${dateString}T12:00:00`;
+  const d = new Date(safe);
+  return isNaN(d.getTime()) ? null : d;
+};
 
 interface ConcertDetailsDialogProps {
   open: boolean;
@@ -58,6 +65,9 @@ const ConcertDetailsDialog = ({
     }
   };
 
+  const dateObj = parseConcertDate(concert.date);
+  const dateLabel = dateObj ? format(dateObj, "EEEE, MMM do ''yy") : concert.date;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -77,7 +87,7 @@ const ConcertDetailsDialog = ({
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="w-4 h-4" />
-              <span>{concert.date}</span>
+              <span>{dateLabel}</span>
             </div>
           </div>
 
