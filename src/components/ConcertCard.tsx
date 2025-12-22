@@ -31,14 +31,9 @@ const ConcertCard = ({
   onOpenDetails 
 }: ConcertCardProps) => {
   const formatDate = (dateString: string) => {
-    // Try to parse the date string
-    const date = new Date(dateString);
+    // Add noon time to prevent timezone shift issues with date-only strings
+    const date = new Date(dateString + "T12:00:00");
     if (isNaN(date.getTime())) {
-      // If parsing fails, try to extract from the string
-      const parts = dateString.split(', ');
-      if (parts.length >= 2) {
-        return { month: parts[1]?.split(' ')[0]?.slice(0, 3) || 'TBD', day: parts[1]?.split(' ')[1] || '?' };
-      }
       return { month: 'TBD', day: '?' };
     }
     const month = date.toLocaleString('default', { month: 'short' });
