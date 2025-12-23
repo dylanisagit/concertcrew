@@ -163,7 +163,7 @@ const ConcertCard = ({
                     {interestedCount} {interestedCount === 1 ? 'friend' : 'friends'} interested
                   </button>
                 </HoverCardTrigger>
-                <HoverCardContent className="w-56">
+                <HoverCardContent className="w-56 z-[100]">
                   <div className="space-y-1">
                     <h4 className="text-sm font-semibold">Interested Friends</h4>
                     <ul className="text-sm text-muted-foreground">
