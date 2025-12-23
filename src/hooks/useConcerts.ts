@@ -169,6 +169,12 @@ export const useConcerts = () => {
     return interests.filter((i) => i.concert_id === concertId).length;
   };
 
+  const getInterestedUserIds = (concertId: string) => {
+    return interests
+      .filter((i) => i.concert_id === concertId)
+      .map((i) => i.user_id);
+  };
+
   const getUpcomingConcerts = () => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -194,6 +200,7 @@ export const useConcerts = () => {
     toggleInterest,
     isInterested,
     getInterestedCount,
+    getInterestedUserIds,
     getUpcomingConcerts,
     getPastConcerts,
     refetch: fetchConcerts,

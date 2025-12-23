@@ -2,6 +2,15 @@ import { Calendar, MapPin, Ticket, ExternalLink, Music2, MessageCircle, Users, S
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+interface InterestedUser {
+  display_name: string;
+}
 
 interface ConcertCardProps {
   concert: {
@@ -17,6 +26,8 @@ interface ConcertCardProps {
     imageUrl?: string;
   };
   interestedCount?: number;
+  interestedUsers?: InterestedUser[];
+  isAdmin?: boolean;
   commentCount?: number;
   isInterested?: boolean;
   onToggleInterest?: () => void;
@@ -26,6 +37,8 @@ interface ConcertCardProps {
 const ConcertCard = ({ 
   concert, 
   interestedCount = 0,
+  interestedUsers = [],
+  isAdmin = false,
   commentCount = 0,
   isInterested = false,
   onToggleInterest,
@@ -143,9 +156,29 @@ const ConcertCard = ({
         {interestedCount > 0 && (
           <div className="mt-4 pt-4 border-t border-border/50 flex items-center gap-2">
             <Users className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">
-              {interestedCount} {interestedCount === 1 ? 'friend' : 'friends'} interested
-            </span>
+            {isAdmin && interestedUsers.length > 0 ? (
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <button className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer underline decoration-dotted underline-offset-2">
+                    {interestedCount} {interestedCount === 1 ? 'friend' : 'friends'} interested
+                  </button>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-56">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold">Interested Friends</h4>
+                    <ul className="text-sm text-muted-foreground">
+                      {interestedUsers.map((user, idx) => (
+                        <li key={idx} className="py-0.5">{user.display_name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                {interestedCount} {interestedCount === 1 ? 'friend' : 'friends'} interested
+              </span>
+            )}
           </div>
         )}
       </div>
