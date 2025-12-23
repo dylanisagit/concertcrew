@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import ConcertCard from "./ConcertCard";
 import ConcertDetailsDialog from "./ConcertDetailsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useConcerts } from "@/hooks/useConcerts";
+import { useConcerts, Profile } from "@/hooks/useConcerts";
+import { useAuth } from "@/hooks/useAuth";
 import { Calendar, History, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -23,19 +24,49 @@ const ConcertGrid = () => {
   const [selectedConcert, setSelectedConcert] = useState<ConcertDetails | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
+  const [interestedProfiles, setInterestedProfiles] = useState<Record<string, Profile[]>>({});
   
+  const { isAdmin } = useAuth();
   const { 
     loading, 
     concerts,
     toggleInterest, 
     isInterested, 
     getInterestedCount,
+    getInterestedUserIds,
     getUpcomingConcerts,
     getPastConcerts 
   } = useConcerts();
 
   const upcomingConcerts = getUpcomingConcerts();
   const pastConcerts = getPastConcerts();
+
+  // Fetch interested user profiles for admins
+  useEffect(() => {
+    const fetchInterestedProfiles = async () => {
+      if (!isAdmin || concerts.length === 0) return;
+      
+      const profilesByConvert: Record<string, Profile[]> = {};
+      
+      for (const concert of concerts) {
+        const userIds = getInterestedUserIds(concert.id);
+        if (userIds.length === 0) continue;
+        
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, user_id, display_name, avatar_url, email')
+          .in('user_id', userIds);
+        
+        if (!error && data) {
+          profilesByConvert[concert.id] = data;
+        }
+      }
+      
+      setInterestedProfiles(profilesByConvert);
+    };
+
+    fetchInterestedProfiles();
+  }, [isAdmin, concerts, getInterestedUserIds]);
 
   useEffect(() => {
     const fetchCommentCounts = async () => {
@@ -137,6 +168,8 @@ const ConcertGrid = () => {
                       isInterested={isInterested(concert.id)}
                       onToggleInterest={() => toggleInterest(concert.id)}
                       interestedCount={getInterestedCount(concert.id)}
+                      interestedUsers={interestedProfiles[concert.id] || []}
+                      isAdmin={isAdmin}
                       commentCount={commentCounts[concert.id] || 0}
                       onOpenDetails={() => handleOpenDetails(concertDetails)}
                     />
@@ -177,6 +210,8 @@ const ConcertGrid = () => {
                       isInterested={isInterested(concert.id)}
                       onToggleInterest={() => toggleInterest(concert.id)}
                       interestedCount={getInterestedCount(concert.id)}
+                      interestedUsers={interestedProfiles[concert.id] || []}
+                      isAdmin={isAdmin}
                       commentCount={commentCounts[concert.id] || 0}
                       onOpenDetails={() => handleOpenDetails(concertDetails)}
                     />
