@@ -7,6 +7,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InterestedUser {
   display_name: string;
@@ -34,16 +36,17 @@ interface ConcertCardProps {
   onOpenDetails?: () => void;
 }
 
-const ConcertCard = ({ 
-  concert, 
+const ConcertCard = ({
+  concert,
   interestedCount = 0,
   interestedUsers = [],
   isAdmin = false,
   commentCount = 0,
   isInterested = false,
   onToggleInterest,
-  onOpenDetails 
+  onOpenDetails,
 }: ConcertCardProps) => {
+  const isMobile = useIsMobile();
   const parseConcertDate = (dateString: string) => {
     // If it's a date-only string (YYYY-MM-DD), add a local noon time to avoid timezone day-shift.
     const safe = dateString.includes("T") ? dateString : `${dateString}T12:00:00`;
@@ -157,23 +160,53 @@ const ConcertCard = ({
           <div className="mt-4 pt-4 border-t border-border/50 flex items-center gap-2">
             <Users className="w-4 h-4 text-muted-foreground" />
             {isAdmin && interestedUsers.length > 0 ? (
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <button className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer underline decoration-dotted underline-offset-2">
-                    {interestedCount} {interestedCount === 1 ? 'friend' : 'friends'} interested
-                  </button>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-56 z-[100]">
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-semibold">Interested Friends</h4>
-                    <ul className="text-sm text-muted-foreground">
-                      {interestedUsers.map((user, idx) => (
-                        <li key={idx} className="py-0.5">{user.display_name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
+              isMobile ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
+                    >
+                      {interestedCount} {interestedCount === 1 ? "friend" : "friends"} interested
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-56">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold">Interested Friends</h4>
+                      <ul className="text-sm text-muted-foreground">
+                        {interestedUsers.map((user, idx) => (
+                          <li key={idx} className="py-0.5">
+                            {user.display_name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <button
+                      type="button"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
+                    >
+                      {interestedCount} {interestedCount === 1 ? "friend" : "friends"} interested
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-56">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold">Interested Friends</h4>
+                      <ul className="text-sm text-muted-foreground">
+                        {interestedUsers.map((user, idx) => (
+                          <li key={idx} className="py-0.5">
+                            {user.display_name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              )
             ) : (
               <span className="text-sm text-muted-foreground">
                 {interestedCount} {interestedCount === 1 ? 'friend' : 'friends'} interested
