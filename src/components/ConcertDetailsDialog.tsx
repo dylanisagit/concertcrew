@@ -60,6 +60,12 @@ const ConcertDetailsDialog = ({
             Not Going
           </Badge>
         );
+      case "cancelled":
+        return (
+          <Badge variant="secondary" className="bg-muted/50 text-muted-foreground border-muted-foreground/30">
+            Concert Cancelled
+          </Badge>
+        );
       default:
         return null;
     }

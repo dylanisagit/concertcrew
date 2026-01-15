@@ -67,6 +67,8 @@ const ConcertCard = ({
         return <Badge variant="secondary" className="bg-success/20 text-success border-success/30">Ticket Purchased</Badge>;
       case "not_going":
         return <Badge variant="secondary" className="bg-destructive/20 text-destructive border-destructive/30">Not Going</Badge>;
+      case "cancelled":
+        return <Badge variant="secondary" className="bg-muted/50 text-muted-foreground border-muted-foreground/30">Concert Cancelled</Badge>;
       default:
         return null;
     }
