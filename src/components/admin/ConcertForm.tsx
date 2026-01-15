@@ -36,7 +36,7 @@ const concertSchema = z.object({
   image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   spotify_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   ticket_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
-  ticket_status: z.enum(["thinking", "purchased", "not_going"]).optional(),
+  ticket_status: z.enum(["thinking", "purchased", "not_going", "cancelled"]).optional(),
   review: z.string().max(2000).optional(),
 });
 
@@ -250,6 +250,7 @@ export const ConcertForm = ({ concertId, onCancel, onSaveComplete }: ConcertForm
                         <SelectItem value="thinking">Contemplating</SelectItem>
                         <SelectItem value="purchased">Ticket Purchased</SelectItem>
                         <SelectItem value="not_going">Not Going</SelectItem>
+                        <SelectItem value="cancelled">Concert Cancelled</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
