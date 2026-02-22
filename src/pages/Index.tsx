@@ -2,8 +2,13 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ConcertGrid from "@/components/ConcertGrid";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { History } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -25,6 +30,14 @@ const Index = () => {
           </div>
         </section>
         <ConcertGrid />
+        <section className="py-6">
+          <div className="container mx-auto px-4 flex justify-center">
+            <Button variant="outline" onClick={() => navigate("/attended")} className="gap-2">
+              <History className="w-4 h-4" />
+              View Concerts Attended
+            </Button>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
