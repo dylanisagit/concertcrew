@@ -15,7 +15,7 @@ const HeroSection = () => {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
           <span className="bg-transparent text-slate-900 text-6xl font-sans font-bold">Dylan's Concert Crew</span>
         </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-lg">Browse upcoming shows that piqued Dylan's interest and let him know if you're similarly intrigued through the Discuss feature. Hit the I'm Interested button to let him know who's going to which gigs. The playlist below contains 3 solid tracks from each of the artists. </p>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-lg">Browse upcoming shows that piqued Dylan's interest and let him know if you're similarly intrigued through the Discuss feature. Hit the I'm Interested button to let him know who's going to which gigs. The playlist below contains 3 solid tracks from each of the artists. And if you'd like a little regret, check out the shows that the Crew have already attended. </p>
         </div>
       </div>
     </section>;
